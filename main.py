@@ -144,6 +144,57 @@ _BAZAAR_EXTENSIONS = {
                 },
             },
         },
+        "schema": {
+            "type": "object",
+            "properties": {
+                "review_id": {"type": "string"},
+                "review_type": {"type": "string"},
+                "status": {"type": "string"},
+                "experimental": {"type": "boolean"},
+                "agent_id": {"type": "string"},
+                "resource_url": {"type": "string"},
+                "resource_type": {"type": "string"},
+                "payment_protocol": {"type": "string"},
+                "amount": {"type": "string"},
+                "currency": {"type": "string"},
+                "decision": {"type": "string"},
+                "resource_control": {
+                    "type": "object",
+                    "properties": {
+                        "resource_binding": {"type": "string"},
+                        "duplicate_payment_risk": {"type": "string"},
+                        "budget_status": {"type": "string"},
+                        "metadata_privacy": {"type": "string"},
+                        "fulfillment_check": {"type": "string"},
+                        "evidence_receipt_required": {"type": "boolean"},
+                        "reconciliation_required": {"type": "boolean"},
+                    },
+                    "required": [
+                        "resource_binding", "duplicate_payment_risk", "budget_status",
+                        "metadata_privacy", "fulfillment_check",
+                        "evidence_receipt_required", "reconciliation_required",
+                    ],
+                },
+                "agent_guidance": {
+                    "type": "object",
+                    "properties": {
+                        "before_payment": {"type": "array", "items": {"type": "string"}},
+                        "after_payment": {"type": "array", "items": {"type": "string"}},
+                    },
+                    "required": ["before_payment", "after_payment"],
+                },
+                "evidence_fields": {"type": "array", "items": {"type": "string"}},
+                "recommended_next_step": {"type": "string"},
+                "created_at": {"type": "string"},
+            },
+            "required": [
+                "review_id", "review_type", "status", "experimental",
+                "agent_id", "resource_url", "resource_type",
+                "payment_protocol", "amount", "currency", "decision",
+                "resource_control", "agent_guidance", "evidence_fields",
+                "recommended_next_step", "created_at",
+            ],
+        },
     }
 }
 

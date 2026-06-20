@@ -1,0 +1,94 @@
+openapi: "3.1.0"
+info:
+  title: Agent Paid Resource Control
+  version: "0.1.0"
+  description: >
+    An experimental external control layer for AI agents that pay for web content,
+    APIs, data, and financial workflow resources.
+    Use POST /api/paid-resource/review before paying for a resource.
+    Not a payment protocol, wallet, settlement layer, or official standard.
+  x-guidance: >
+    Call POST /api/paid-resource/review before an AI agent pays for a resource.
+    This endpoint checks resource binding, duplicate payment risk, metadata privacy,
+    fulfillment requirements, and evidence receipt fields.
+    Requires x402 payment of 0.03 USDC on Base (eip155:8453).
+paths:
+  /api/paid-resource/review:
+    post:
+      summary: Review a paid resource access request
+      description: >
+        Review an AI agent's intent to pay for a resource.
+        Returns decision (allow/deny/review_required), resource control fields,
+        agent guidance, and evidence receipt fields.
+        Requires x402 payment of 0.03 USDC.
+      tags:
+        - Paid Resource Control
+      x-payment-info:
+        protocols: ["x402"]
+        authMode: "x402"
+        price: "0.03"
+        currency: "USDC"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - agent_id
+                - resource_url
+                - resource_type
+                - payment_protocol
+                - amount
+                - currency
+                - payment_purpose
+                - expected_result
+              properties:
+                agent_id:
+                  type: string
+                resource_url:
+                  type: string
+                resource_type:
+                  type: string
+                payment_protocol:
+                  type: string
+                amount:
+                  type: string
+                currency:
+                  type: string
+                  enum: [USDC, JPYC]
+                payment_purpose:
+                  type: string
+                expected_result:
+                  type: string
+                license_terms_id:
+                  type: string
+                payment_intent_id:
+                  type: string
+                memo_id:
+                  type: string
+                metadata:
+                  type: object
+      responses:
+        "200":
+          description: Review result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  review_id:
+                    type: string
+                  decision:
+                    type: string
+                    enum: [allow, deny, review_required]
+                  resource_control:
+                    type: object
+                  agent_guidance:
+                    type: object
+                  evidence_fields:
+                    type: array
+                    items:
+                      type: string
+        "402":
+          description: Payment required (x402)

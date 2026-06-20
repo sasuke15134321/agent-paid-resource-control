@@ -365,6 +365,39 @@ async def paid_resource_review(payload: PaidResourceReviewRequest, request: Requ
             "evidence_id",
         ],
         "recommended_next_step": "proceed_only_after_budget_and_resource_binding_check",
+        "related_controls": [
+            {
+                "service": "agent-memory-api",
+                "endpoint": "/api/search-result-trust/check",
+                "base_url": "https://agent-memory-api-bix5.onrender.com",
+                "purpose": "Check whether the resource or context can be trusted before using it for agent decisions.",
+            },
+            {
+                "service": "agent-security-gateway",
+                "endpoint": "/api/security/metadata-sanitize",
+                "base_url": "https://agent-security-gateway.onrender.com",
+                "purpose": "Check whether payment metadata contains sensitive or unsafe information.",
+            },
+            {
+                "service": "agent-budget-guard",
+                "endpoint": "/api/budget/check",
+                "base_url": "https://agent-budget-guard.onrender.com",
+                "purpose": "Check whether the paid resource access is within the agent budget.",
+            },
+            {
+                "service": "ai-agent-payment-safety-stack",
+                "endpoint": "/api/payment-evidence/check",
+                "base_url": "https://ai-agent-payment-safety-stack.onrender.com",
+                "purpose": "Check or prepare evidence for the paid resource transaction.",
+            },
+        ],
+        "recommended_flow": [
+            "agent-memory-api: trust/context check",
+            "agent-security-gateway: metadata/privacy check",
+            "agent-budget-guard: budget/duplicate payment check",
+            "agent-paid-resource-control: paid resource review",
+            "ai-agent-payment-safety-stack: evidence receipt/payment check",
+        ],
         "non_goals": [
             "not a payment protocol",
             "not a wallet",
@@ -424,6 +457,21 @@ This endpoint is paid via x402 (0.03 USDC on Base eip155:8453).
 
 Not a payment protocol, wallet, settlement layer, legal compliance system, or official standard.
 Not affiliated with AWS, Coinbase, Arc, Circle, or any payment network.
+
+Related Services
+
+agent-paid-resource-control connects to the following services:
+
+1. agent-memory-api: trust/context check before paid resource use
+2. agent-security-gateway: metadata/privacy check before payment
+3. agent-budget-guard: budget/duplicate payment check before x402 payment
+4. ai-agent-payment-safety-stack: evidence receipt after payment
+
+Agent-readable relation index:
+GET /.well-known/agent-control-relations.json
+
+Recommended flow:
+trust check → metadata check → budget check → paid resource review → evidence receipt
 """
     return PlainTextResponse(content)
 
@@ -496,6 +544,63 @@ async def x402_manifest():
                     }
                 ],
             }
+        ],
+    }
+
+
+@app.get("/.well-known/agent-control-relations.json", include_in_schema=False)
+async def agent_control_relations():
+    return {
+        "name": "Agent Paid Resource Control Relations",
+        "version": "0.1.0",
+        "status": "experimental",
+        "primary_service": "agent-paid-resource-control",
+        "primary_url": "https://agent-paid-resource-control.onrender.com",
+        "description": "AI-readable relation index connecting paid resource review to trust, security, budget, and evidence layers.",
+        "related_services": [
+            {
+                "name": "agent-memory-api",
+                "base_url": "https://agent-memory-api-bix5.onrender.com",
+                "role": "trust_and_context",
+                "relation": "use_before_paid_resource_review",
+                "key_endpoint": "/api/search-result-trust/check",
+            },
+            {
+                "name": "agent-security-gateway",
+                "base_url": "https://agent-security-gateway.onrender.com",
+                "role": "security_and_metadata_privacy",
+                "relation": "use_before_payment_or_metadata_submission",
+                "key_endpoint": "/api/security/metadata-sanitize",
+            },
+            {
+                "name": "agent-budget-guard",
+                "base_url": "https://agent-budget-guard.onrender.com",
+                "role": "budget_and_duplicate_payment_control",
+                "relation": "use_before_x402_payment",
+                "key_endpoint": "/api/budget/check",
+            },
+            {
+                "name": "ai-agent-payment-safety-stack",
+                "base_url": "https://ai-agent-payment-safety-stack.onrender.com",
+                "role": "payment_evidence_and_receipt",
+                "relation": "use_after_or_during_paid_resource_payment",
+                "key_endpoint": "/api/payment-evidence/check",
+            },
+        ],
+        "recommended_flow": [
+            "trust_check",
+            "metadata_privacy_check",
+            "budget_check",
+            "paid_resource_review",
+            "payment_evidence_receipt",
+        ],
+        "external_control_materials_map": "https://ai-agent-payment-safety-stack.onrender.com/.well-known/external-control-materials.json",
+        "non_goals": [
+            "not a payment protocol",
+            "not a wallet",
+            "not a settlement layer",
+            "not a legal compliance system",
+            "not an official standard",
         ],
     }
 

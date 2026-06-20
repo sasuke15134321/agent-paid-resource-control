@@ -169,11 +169,6 @@ _BAZAAR_EXTENSIONS = {
                         "evidence_receipt_required": {"type": "boolean"},
                         "reconciliation_required": {"type": "boolean"},
                     },
-                    "required": [
-                        "resource_binding", "duplicate_payment_risk", "budget_status",
-                        "metadata_privacy", "fulfillment_check",
-                        "evidence_receipt_required", "reconciliation_required",
-                    ],
                 },
                 "agent_guidance": {
                     "type": "object",
@@ -181,19 +176,11 @@ _BAZAAR_EXTENSIONS = {
                         "before_payment": {"type": "array", "items": {"type": "string"}},
                         "after_payment": {"type": "array", "items": {"type": "string"}},
                     },
-                    "required": ["before_payment", "after_payment"],
                 },
                 "evidence_fields": {"type": "array", "items": {"type": "string"}},
                 "recommended_next_step": {"type": "string"},
                 "created_at": {"type": "string"},
             },
-            "required": [
-                "review_id", "review_type", "status", "experimental",
-                "agent_id", "resource_url", "resource_type",
-                "payment_protocol", "amount", "currency", "decision",
-                "resource_control", "agent_guidance", "evidence_fields",
-                "recommended_next_step", "created_at",
-            ],
         },
     }
 }

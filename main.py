@@ -312,7 +312,11 @@ async def paid_resource_review(payload: PaidResourceReviewRequest, request: Requ
     )
 
     if not TEST_MODE and payment_header:
-        verified = await payment_verifier.verify_payment(payment_header, "/api/paid-resource/review")
+        verified = await payment_verifier.verify_payment(
+            payment_header,
+            WALLET_ADDRESS,
+            expected_amount="0.03",
+        )
         if not verified:
             return JSONResponse(
                 status_code=402,

@@ -85,34 +85,63 @@ _BAZAAR_EXTENSIONS = {
             "input": {
                 "type": "http",
                 "method": "POST",
-                "bodyType": "json",
-                "body": {
-                    "agent_id": "agent_001",
-                    "resource_url": "https://example.com/api/data",
-                    "resource_type": "data_api",
+                "queryParams": {
+                    "agent_id": "agent_demo_001",
+                    "resource_url": "https://example.com/premium/report",
+                    "resource_type": "web_content",
                     "payment_protocol": "x402",
                     "amount": "0.03",
                     "currency": "USDC",
-                    "payment_purpose": "data_access",
-                    "expected_result": "JSON response with market data",
+                    "payment_purpose": "access_paid_research_report",
+                    "expected_result": "premium_report_access",
+                    "payment_intent_id": "pi_demo_001",
+                    "memo_id": "memo_demo_001",
                 },
             },
             "output": {
                 "type": "json",
                 "example": {
+                    "review_id": "paid_resource_review_abc123",
+                    "review_type": "agent_paid_resource_review",
+                    "status": "created",
+                    "experimental": True,
+                    "agent_id": "agent_demo_001",
+                    "resource_url": "https://example.com/premium/report",
+                    "resource_type": "web_content",
+                    "payment_protocol": "x402",
+                    "amount": "0.03",
+                    "currency": "USDC",
                     "decision": "review_required",
                     "resource_control": {
                         "resource_binding": "check_required",
                         "duplicate_payment_risk": "unknown",
+                        "budget_status": "not_checked",
+                        "metadata_privacy": "passed",
+                        "fulfillment_check": "required",
+                        "evidence_receipt_required": True,
+                        "reconciliation_required": True,
                     },
+                    "agent_guidance": {
+                        "before_payment": [
+                            "Confirm that the payment is bound to the intended resource_url.",
+                            "Check whether this resource was already paid for in the current task window.",
+                            "Confirm that the expected_result is specific enough to verify after payment.",
+                        ],
+                        "after_payment": [
+                            "Record payment_tx or settlement reference.",
+                            "Verify that the expected_result was fulfilled.",
+                            "Create a paid access evidence receipt.",
+                        ],
+                    },
+                    "evidence_fields": [
+                        "agent_id", "resource_url", "resource_type",
+                        "amount", "currency", "payment_protocol",
+                        "payment_intent_id", "expected_result",
+                        "actual_result", "payment_tx", "memo_id", "evidence_id",
+                    ],
+                    "recommended_next_step": "proceed_only_after_budget_and_resource_binding_check",
+                    "created_at": "2026-06-18T00:00:00Z",
                 },
-            },
-        },
-        "schema": {
-            "type": "object",
-            "properties": {
-                "decision": {"type": "string"},
-                "resource_control": {"type": "object"},
             },
         },
     }
@@ -148,8 +177,11 @@ async def x402_payment_middleware(request: Request, call_next):
                 "error": "Payment required",
                 "resource": {
                     "url": str(request.url),
-                    "method": method,
-                    "description": "Agent Paid Resource Review — 0.03 USDC",
+                    "description": (
+                        "Review paid resource access for AI agents, including resource binding, "
+                        "duplicate payment risk, fulfillment requirements, evidence receipt fields, "
+                        "and reconciliation guidance."
+                    ),
                     "mimeType": "application/json",
                 },
                 "accepts": [_accept],

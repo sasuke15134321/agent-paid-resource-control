@@ -41,7 +41,8 @@ app = FastAPI(
         "An experimental external control layer for AI agents that pay for web content, "
         "APIs, data, and financial workflow resources. "
         "Use POST /api/paid-resource/review before paying for a resource. "
-        "Not a payment protocol, wallet, settlement layer, or official standard."
+        "Not a payment protocol, wallet, settlement layer, or official standard. "
+        "Also supports paid data lookup review for market data, crypto data, onchain data, and news data APIs."
     ),
 )
 
@@ -473,6 +474,10 @@ GET /.well-known/agent-control-relations.json
 
 Recommended flow:
 trust check → metadata check → budget check → paid resource review → evidence receipt
+
+## Priority 0.5: Paid Data Lookup Support
+
+Use this before an AI agent pays for a paid data API or x402 resource. It can review resource purpose, expected result, amount, and freshness requirements for market data, crypto data, and token metadata lookups.
 """
     return PlainTextResponse(content)
 

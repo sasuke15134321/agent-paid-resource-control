@@ -518,6 +518,17 @@ async def agent_json():
             "network": "eip155:8453",
             "payTo": WALLET_ADDRESS,
         },
+        "paid_data_lookup_support": {
+            "role": "before_payment_review",
+            "purpose": "Review paid data lookup requests before an AI agent pays for market data, crypto data, token metadata, onchain data, or news data via x402.",
+            "use_when": [
+                "an AI agent wants to buy crypto price data",
+                "an AI agent wants to look up token metadata",
+                "an AI agent needs market research data via x402",
+                "freshness requirement needs to be confirmed before payment",
+            ],
+            "key_fields": ["resource_type", "payment_purpose", "freshness_required_seconds", "expected_result"],
+        },
     }
 
 

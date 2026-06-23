@@ -36,3 +36,7 @@ After payment, record:
 
 Not a payment protocol, wallet, settlement layer, legal compliance system, or official standard.
 Not affiliated with AWS, Coinbase, Arc, Circle, or any payment network.
+
+## Priority 0.5: Paid Data Lookup Support
+
+Use this before an AI agent pays for a paid data API or x402 resource. It can review resource purpose, expected result, amount, and freshness requirements for market data, crypto data, and token metadata lookups.

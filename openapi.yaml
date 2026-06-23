@@ -21,6 +21,7 @@ paths:
         Returns decision (allow/deny/review_required), resource control fields,
         agent guidance, and evidence receipt fields.
         Requires x402 payment of 0.03 USDC.
+        Also supports paid data lookup review for market data, crypto data, onchain data, and news data APIs.
       tags:
         - Paid Resource Control
       x-payment-info:

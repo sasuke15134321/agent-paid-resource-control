@@ -246,15 +246,16 @@ payment_verifier = PaymentVerifier()
 class PaidResourceReviewRequest(BaseModel):
     agent_id: str = Field(..., description="AI agent identifier")
     resource_url: str = Field(..., description="URL of the resource to be paid for")
-    resource_type: str = Field(..., description="Type of resource (e.g. data_api, web_content, financial_data)")
+    resource_type: str = Field(..., description="Type of resource. Candidates: data_api, web_content, financial_data, market_data, crypto_data, onchain_data, news_data, token_metadata")
     payment_protocol: str = Field(..., description="Payment protocol (e.g. x402, stripe)")
     amount: str = Field(..., description="Payment amount as string")
     currency: str = Field(..., description="Currency (USDC or JPYC)")
-    payment_purpose: str = Field(..., description="Purpose of the payment")
+    payment_purpose: str = Field(..., description="Purpose of the payment. Candidates: access_paid_research_report, price_lookup, token_metadata, market_research, onchain_lookup")
     expected_result: str = Field(..., description="Expected result after payment")
     license_terms_id: Optional[str] = Field(default=None, description="License terms identifier")
     payment_intent_id: Optional[str] = Field(default=None, description="Payment intent ID")
     memo_id: Optional[str] = Field(default=None, description="Memo ID for reconciliation")
+    freshness_required_seconds: Optional[int] = Field(default=None, description="Maximum acceptable age of data in seconds (e.g. 60 for real-time market data). Optional.")
     metadata: Optional[Dict[str, Any]] = Field(default=None, description="Additional metadata")
 
 

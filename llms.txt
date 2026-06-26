@@ -5,6 +5,20 @@
 Use this API before an AI agent pays for or uses an external resource.
 This is the front door of the AI Agent External Control Stack.
 
+Use agent-paid-resource-control first when an AI agent is about to use or pay for an external resource.
+
+## Primary use cases
+1. Paid API / x402 Resource Review
+   Decide whether an agent should use or pay for a paid API or x402 resource.
+
+2. Tool / MCP / GitHub Repo Review
+   Decide whether an agent should use an external tool, MCP server, GitHub repository, CLI, or binary.
+
+3. Memory-backed Payment or CRM Decision Review
+   Decide whether stored memory can be used for a payment, CRM update, or external action decision.
+
+This API returns a pre-action review with decision, risk_level, payment_allowed, and required_checks.
+
 ## When to use
 - Before paying for a paid API or x402 resource
 - Before using an external tool, MCP server, or GitHub repository

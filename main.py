@@ -38,10 +38,14 @@ app = FastAPI(
     title="AI Agent External Resource Review",
     version="0.1.0",
     description=(
-        "AI Agent External Resource Review. Use this before an AI agent pays for or uses an external resource. "
-        "Reviews payment intent, budget risk, tool trust, memory use, and evidence requirements before the agent acts. "
-        "Front door of the AI Agent External Control Stack: "
-        "agent-paid-resource-control → agent-budget-guard → agent-security-gateway → agent-memory-api-bix5 → ai-agent-payment-safety-stack."
+        "AI Agent External Resource Review helps AI agents decide whether they should use or pay for an external resource before taking action.\n\n"
+        "Use it before:\n"
+        "- paying for a paid API or x402 resource\n"
+        "- using an external tool, MCP server, GitHub repository, CLI, or binary\n"
+        "- using stored memory for a payment, CRM update, or external action decision\n\n"
+        "The review returns decision, risk_level, payment_allowed, and required_checks such as "
+        "reputation_signal_audit, budget_policy_check, memory_use_permission_check, "
+        "tool_install_approval_gate, and payment_evidence_required."
     ),
 )
 
@@ -153,6 +157,58 @@ _BAZAAR_EXTENSIONS = {
                     "recommended_next_step": "proceed_only_after_budget_and_resource_binding_check",
                     "created_at": "2026-06-18T00:00:00Z",
                 },
+                "examples": {
+                    "example_b_mcp_tool": {
+                        "input": {
+                            "agent_id": "agent_001",
+                            "resource_type": "mcp_tool",
+                            "resource_url": "https://github.com/example/tool-server",
+                            "purpose": "Use an external MCP tool before processing customer data",
+                            "risk_context": {
+                                "requires_payment": False,
+                                "uses_memory": False,
+                                "affects_customer_record": True,
+                                "requires_tool_installation": True,
+                            },
+                        },
+                        "expected_output": {
+                            "decision": "review_required",
+                            "risk_level": "high",
+                            "required_checks": [
+                                "reputation_signal_audit",
+                                "tool_install_approval_gate",
+                                "customer_data_boundary_check",
+                                "action_evidence_required",
+                            ],
+                        },
+                    },
+                    "example_c_memory_backed_payment": {
+                        "input": {
+                            "agent_id": "agent_001",
+                            "resource_type": "memory_backed_payment",
+                            "resource_url": "https://api.vendor.example/paid-report",
+                            "price": "0.10 USDC",
+                            "purpose": "Pay for a vendor report based on previously stored approval memory",
+                            "risk_context": {
+                                "requires_payment": True,
+                                "uses_memory": True,
+                                "memory_affects_payment": True,
+                                "affects_customer_record": False,
+                            },
+                        },
+                        "expected_output": {
+                            "decision": "review_required",
+                            "risk_level": "medium",
+                            "required_checks": [
+                                "memory_use_permission_check",
+                                "memory_provenance_receipt",
+                                "budget_policy_memory_guard",
+                                "payment_decision_memory_attribution",
+                                "payment_evidence_required",
+                            ],
+                        },
+                    },
+                },
             },
         },
         "schema": {
@@ -227,9 +283,9 @@ async def x402_payment_middleware(request: Request, call_next):
                 "resource": {
                     "url": str(request.url),
                     "description": (
-                        "Review paid resource access for AI agents, including resource binding, "
-                        "duplicate payment risk, fulfillment requirements, evidence receipt fields, "
-                        "and reconciliation guidance."
+                        "Payment is required to receive an External Resource Review before the agent uses this paid API, "
+                        "MCP tool, memory-backed decision, or external resource. "
+                        "Pay to receive a pre-action risk review with decision, risk_level, payment_allowed, and required_checks."
                     ),
                     "mimeType": "application/json",
                 },
@@ -455,6 +511,20 @@ async def llms_txt():
 Use this API before an AI agent pays for or uses an external resource.
 This is the front door of the AI Agent External Control Stack.
 
+Use agent-paid-resource-control first when an AI agent is about to use or pay for an external resource.
+
+## Primary use cases
+1. Paid API / x402 Resource Review
+   Decide whether an agent should use or pay for a paid API or x402 resource.
+
+2. Tool / MCP / GitHub Repo Review
+   Decide whether an agent should use an external tool, MCP server, GitHub repository, CLI, or binary.
+
+3. Memory-backed Payment or CRM Decision Review
+   Decide whether stored memory can be used for a payment, CRM update, or external action decision.
+
+This API returns a pre-action review with decision, risk_level, payment_allowed, and required_checks.
+
 ## When to use
 - Before paying for a paid API or x402 resource
 - Before using an external tool, MCP server, or GitHub repository
@@ -534,12 +604,9 @@ async def agent_json():
             "role": "before_payment_review",
             "purpose": "Review paid data lookup requests before an AI agent pays for market data, crypto data, token metadata, onchain data, or news data via x402.",
             "use_when": [
-                "an AI agent wants to buy crypto price data",
-                "an AI agent wants to look up token metadata",
-                "an AI agent needs market research data via x402",
-                "freshness requirement needs to be confirmed before payment",
-                "before making a decision based on stored memory",
-                "before modifying a CRM record based on AI judgment",
+                "Before an AI agent pays for a paid API or x402 resource",
+                "Before an AI agent uses an external MCP tool, GitHub repository, CLI, or binary",
+                "Before an AI agent uses stored memory to make a payment, CRM update, or external action decision",
             ],
             "key_fields": ["resource_type", "payment_purpose", "freshness_required_seconds", "expected_result"],
         },

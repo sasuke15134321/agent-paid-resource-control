@@ -35,14 +35,13 @@ DANGEROUS_PATTERNS = [
 ]
 
 app = FastAPI(
-    title="Agent Paid Resource Control",
+    title="AI Agent External Resource Review",
     version="0.1.0",
     description=(
-        "An experimental external control layer for AI agents that pay for web content, "
-        "APIs, data, and financial workflow resources. "
-        "Use POST /api/paid-resource/review before paying for a resource. "
-        "Not a payment protocol, wallet, settlement layer, or official standard. "
-        "Also supports paid data lookup review for market data, crypto data, onchain data, and news data APIs."
+        "AI Agent External Resource Review. Use this before an AI agent pays for or uses an external resource. "
+        "Reviews payment intent, budget risk, tool trust, memory use, and evidence requirements before the agent acts. "
+        "Front door of the AI Agent External Control Stack: "
+        "agent-paid-resource-control → agent-budget-guard → agent-security-gateway → agent-memory-api-bix5 → ai-agent-payment-safety-stack."
     ),
 )
 
@@ -87,16 +86,21 @@ _BAZAAR_EXTENSIONS = {
                 "type": "http",
                 "method": "POST",
                 "queryParams": {
-                    "agent_id": "agent_demo_001",
-                    "resource_url": "https://example.com/premium/report",
-                    "resource_type": "web_content",
+                    "agent_id": "agent_001",
+                    "resource_url": "https://example.com/api/market-data",
+                    "resource_type": "paid_api",
                     "payment_protocol": "x402",
-                    "amount": "0.03",
+                    "amount": "0.05",
                     "currency": "USDC",
-                    "payment_purpose": "access_paid_research_report",
-                    "expected_result": "premium_report_access",
-                    "payment_intent_id": "pi_demo_001",
-                    "memo_id": "memo_demo_001",
+                    "payment_purpose": "price_lookup",
+                    "expected_result": "current BTC price with timestamp",
+                    "freshness_required_seconds": 60,
+                    "metadata": {
+                        "uses_memory": True,
+                        "requires_payment": True,
+                        "affects_customer_record": False,
+                        "provider_type": "crypto_data_api",
+                    },
                 },
             },
             "output": {
@@ -139,6 +143,12 @@ _BAZAAR_EXTENSIONS = {
                         "amount", "currency", "payment_protocol",
                         "payment_intent_id", "expected_result",
                         "actual_result", "payment_tx", "memo_id", "evidence_id",
+                    ],
+                    "required_checks": [
+                        "reputation_signal_audit",
+                        "budget_policy_check",
+                        "memory_use_permission_check",
+                        "payment_evidence_required",
                     ],
                     "recommended_next_step": "proceed_only_after_budget_and_resource_binding_check",
                     "created_at": "2026-06-18T00:00:00Z",
@@ -287,9 +297,9 @@ def _evaluate_decision(req: PaidResourceReviewRequest) -> tuple[str, str]:
     "/api/paid-resource/review",
     summary="Review a paid resource access request",
     description=(
-        "Review an AI agent's intent to pay for a resource. "
-        "Returns decision (allow/deny/review_required), resource control fields, "
-        "agent guidance, and evidence receipt fields."
+        "Review whether an AI agent should use or pay for an external resource. "
+        "Covers paid APIs, x402 resources, MCP tools, external data sources, and memory-backed decisions. "
+        "Returns decision, risk level, required checks, and next recommended steps."
     ),
     tags=["Paid Resource Control"],
     include_in_schema=True,
@@ -438,46 +448,48 @@ async def root():
 
 @app.get("/llms.txt", include_in_schema=False)
 async def llms_txt():
-    content = """# Agent Paid Resource Control
+    content = """# AI Agent External Resource Review
+# External Control Front Door for AI Agent Stack
 
-Agent Paid Resource Control is an experimental external control layer for AI agents
-that pay for web content, APIs, data, and financial workflow resources.
+## Purpose
+Use this API before an AI agent pays for or uses an external resource.
+This is the front door of the AI Agent External Control Stack.
 
-Use this API before or after an agent pays for a resource to review:
-- what resource is being paid for
-- whether the payment should be bound to a specific URL/path/API
-- whether duplicate payment risk exists
-- whether metadata is privacy-safe
-- what result should be fulfilled after payment
-- what evidence fields should be recorded
-- whether reconciliation is required
+## When to use
+- Before paying for a paid API or x402 resource
+- Before using an external tool, MCP server, or GitHub repository
+- Before making a decision based on stored memory
+- Before modifying a CRM record based on AI judgment
 
-Main endpoint:
+## External Control Stack routing
+- agent-paid-resource-control: first — review whether an agent should use or pay for an external resource
+- agent-budget-guard: spend limit / duplicate payment / budget risk
+- agent-security-gateway: tool / input / security risk
+- agent-memory-api-bix5: memory use permission / provenance check
+- ai-agent-payment-safety-stack: payment / action / result evidence
+
+## Main endpoint
 POST /api/paid-resource/review
 
 This endpoint is paid via x402 (0.03 USDC on Base eip155:8453).
 
+## Decision logic
+- resource_url empty or invalid → deny
+- amount <= 0 → deny
+- currency not USDC or JPYC → deny
+- metadata contains injection patterns → deny
+- all other cases → review_required
+
+## Evidence fields
+After payment, record:
+- agent_id, resource_url, resource_type
+- amount, currency, payment_protocol
+- payment_intent_id, expected_result
+- actual_result, payment_tx, memo_id, evidence_id
+
+## Non-goals
 Not a payment protocol, wallet, settlement layer, legal compliance system, or official standard.
 Not affiliated with AWS, Coinbase, Arc, Circle, or any payment network.
-
-Related Services
-
-agent-paid-resource-control connects to the following services:
-
-1. agent-memory-api: trust/context check before paid resource use
-2. agent-security-gateway: metadata/privacy check before payment
-3. agent-budget-guard: budget/duplicate payment check before x402 payment
-4. ai-agent-payment-safety-stack: evidence receipt after payment
-
-Agent-readable relation index:
-GET /.well-known/agent-control-relations.json
-
-Recommended flow:
-trust check → metadata check → budget check → paid resource review → evidence receipt
-
-## Priority 0.5: Paid Data Lookup Support
-
-Use this before an AI agent pays for a paid data API or x402 resource. It can review resource purpose, expected result, amount, and freshness requirements for market data, crypto data, and token metadata lookups.
 """
     return PlainTextResponse(content)
 
@@ -490,8 +502,8 @@ async def agent_json():
         "experimental": True,
         "live": True,
         "description": (
-            "Experimental external control layer for AI agents paying for resources. "
-            "Call /api/paid-resource/review before executing a payment."
+            "AI Agent External Resource Review. Front door of the AI Agent External Control Stack. "
+            "Use before an AI agent pays for or uses an external resource."
         ),
         "endpoints": [
             {
@@ -526,6 +538,8 @@ async def agent_json():
                 "an AI agent wants to look up token metadata",
                 "an AI agent needs market research data via x402",
                 "freshness requirement needs to be confirmed before payment",
+                "before making a decision based on stored memory",
+                "before modifying a CRM record based on AI judgment",
             ],
             "key_fields": ["resource_type", "payment_purpose", "freshness_required_seconds", "expected_result"],
         },

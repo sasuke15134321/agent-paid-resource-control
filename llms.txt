@@ -1,23 +1,29 @@
-# Agent Paid Resource Control
+# AI Agent External Resource Review
+# External Control Front Door for AI Agent Stack
 
-Agent Paid Resource Control is an external control layer for AI agents that pay for web content, APIs, data, and financial workflow resources.
+## Purpose
+Use this API before an AI agent pays for or uses an external resource.
+This is the front door of the AI Agent External Control Stack.
 
-Use this API before or after an agent pays for a resource to review:
-- what resource is being paid for
-- whether the payment should be bound to a specific URL/path/API
-- whether duplicate payment risk exists
-- whether metadata is privacy-safe
-- what result should be fulfilled after payment
-- what evidence fields should be recorded
-- whether reconciliation is required
+## When to use
+- Before paying for a paid API or x402 resource
+- Before using an external tool, MCP server, or GitHub repository
+- Before making a decision based on stored memory
+- Before modifying a CRM record based on AI judgment
 
-Main endpoint:
+## External Control Stack routing
+- agent-paid-resource-control: first — review whether an agent should use or pay for an external resource
+- agent-budget-guard: spend limit / duplicate payment / budget risk
+- agent-security-gateway: tool / input / security risk
+- agent-memory-api-bix5: memory use permission / provenance check
+- ai-agent-payment-safety-stack: payment / action / result evidence
+
+## Main endpoint
 POST /api/paid-resource/review
 
 This endpoint is paid via x402 (0.03 USDC on Base eip155:8453).
 
 ## Decision logic
-
 - resource_url empty or invalid → deny
 - amount <= 0 → deny
 - currency not USDC or JPYC → deny
@@ -25,7 +31,6 @@ This endpoint is paid via x402 (0.03 USDC on Base eip155:8453).
 - all other cases → review_required
 
 ## Evidence fields
-
 After payment, record:
 - agent_id, resource_url, resource_type
 - amount, currency, payment_protocol
@@ -33,10 +38,5 @@ After payment, record:
 - actual_result, payment_tx, memo_id, evidence_id
 
 ## Non-goals
-
 Not a payment protocol, wallet, settlement layer, legal compliance system, or official standard.
 Not affiliated with AWS, Coinbase, Arc, Circle, or any payment network.
-
-## Priority 0.5: Paid Data Lookup Support
-
-Use this before an AI agent pays for a paid data API or x402 resource. It can review resource purpose, expected result, amount, and freshness requirements for market data, crypto data, and token metadata lookups.

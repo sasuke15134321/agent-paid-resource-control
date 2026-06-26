@@ -32,6 +32,35 @@ This API returns a pre-action review with decision, risk_level, payment_allowed,
 - agent-memory-api-bix5: memory use permission / provenance check
 - ai-agent-payment-safety-stack: payment / action / result evidence
 
+## Decision outputs
+
+agent-paid-resource-control returns a pre-action decision before an AI agent uses or pays for an external resource.
+
+Typical decisions:
+1. allow
+   The agent may proceed. Payment may be allowed. Evidence logging may still be required.
+
+2. review_required
+   The agent should pause for additional checks or human approval before proceeding.
+
+3. deny
+   The agent should not use or pay for the resource.
+
+Common output fields:
+- decision
+- risk_level
+- payment_allowed
+- required_checks
+- reason
+
+required_checks may include:
+- reputation_signal_audit
+- budget_policy_check
+- memory_use_permission_check
+- payment_evidence_required
+- tool_install_approval_gate
+- customer_data_boundary_check
+
 ## Main endpoint
 POST /api/paid-resource/review
 

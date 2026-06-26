@@ -45,7 +45,13 @@ app = FastAPI(
         "- using stored memory for a payment, CRM update, or external action decision\n\n"
         "The review returns decision, risk_level, payment_allowed, and required_checks such as "
         "reputation_signal_audit, budget_policy_check, memory_use_permission_check, "
-        "tool_install_approval_gate, and payment_evidence_required."
+        "tool_install_approval_gate, and payment_evidence_required.\n\n"
+        "This API returns a pre-action review for AI agents.\n\n"
+        "The review can return:\n"
+        "- allow: proceed with the resource, usually with evidence logging\n"
+        "- review_required: pause for additional checks or approval\n"
+        "- deny: do not use or pay for the resource\n\n"
+        "Each review includes decision, risk_level, payment_allowed, required_checks, and reason."
     ),
 )
 
@@ -158,6 +164,15 @@ _BAZAAR_EXTENSIONS = {
                     "created_at": "2026-06-18T00:00:00Z",
                 },
                 "examples": {
+                    "example_a_allow": {
+                        "expected_output": {
+                            "decision": "allow",
+                            "risk_level": "low",
+                            "payment_allowed": True,
+                            "required_checks": ["payment_evidence_required"],
+                            "reason": "The resource is low-risk, within budget, and no sensitive memory or customer data is involved.",
+                        },
+                    },
                     "example_b_mcp_tool": {
                         "input": {
                             "agent_id": "agent_001",
@@ -206,6 +221,19 @@ _BAZAAR_EXTENSIONS = {
                                 "payment_decision_memory_attribution",
                                 "payment_evidence_required",
                             ],
+                        },
+                    },
+                    "example_d_deny": {
+                        "expected_output": {
+                            "decision": "deny",
+                            "risk_level": "high",
+                            "payment_allowed": False,
+                            "required_checks": [
+                                "tool_install_approval_gate",
+                                "reputation_signal_audit",
+                                "customer_data_boundary_check",
+                            ],
+                            "reason": "The resource requires external tool installation and may affect customer data without sufficient provenance.",
                         },
                     },
                 },
@@ -283,9 +311,9 @@ async def x402_payment_middleware(request: Request, call_next):
                 "resource": {
                     "url": str(request.url),
                     "description": (
-                        "Payment is required to receive an External Resource Review before the agent uses this paid API, "
-                        "MCP tool, memory-backed decision, or external resource. "
-                        "Pay to receive a pre-action risk review with decision, risk_level, payment_allowed, and required_checks."
+                        "Payment is required to receive a pre-action decision for this external resource: "
+                        "allow, review_required, or deny. "
+                        "Pay to receive an External Resource Review with decision, risk_level, payment_allowed, required_checks, and reason before the agent acts."
                     ),
                     "mimeType": "application/json",
                 },
@@ -538,6 +566,35 @@ This API returns a pre-action review with decision, risk_level, payment_allowed,
 - agent-memory-api-bix5: memory use permission / provenance check
 - ai-agent-payment-safety-stack: payment / action / result evidence
 
+## Decision outputs
+
+agent-paid-resource-control returns a pre-action decision before an AI agent uses or pays for an external resource.
+
+Typical decisions:
+1. allow
+   The agent may proceed. Payment may be allowed. Evidence logging may still be required.
+
+2. review_required
+   The agent should pause for additional checks or human approval before proceeding.
+
+3. deny
+   The agent should not use or pay for the resource.
+
+Common output fields:
+- decision
+- risk_level
+- payment_allowed
+- required_checks
+- reason
+
+required_checks may include:
+- reputation_signal_audit
+- budget_policy_check
+- memory_use_permission_check
+- payment_evidence_required
+- tool_install_approval_gate
+- customer_data_boundary_check
+
 ## Main endpoint
 POST /api/paid-resource/review
 
@@ -609,6 +666,7 @@ async def agent_json():
                 "Before an AI agent uses stored memory to make a payment, CRM update, or external action decision",
             ],
             "key_fields": ["resource_type", "payment_purpose", "freshness_required_seconds", "expected_result"],
+            "returns": "pre-action decision with allow, review_required, or deny, including risk_level, payment_allowed, required_checks, and reason",
         },
     }
 

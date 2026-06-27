@@ -38,11 +38,10 @@ app = FastAPI(
     title="Agent Procurement Gate",
     version="0.1.0",
     description=(
-        "Agent Procurement Gate: Pre-purchase and pre-action control API for AI agents. "
-        "Before an AI agent buys, pays for, executes, or relies on an external resource, "
-        "this API returns a machine-readable decision with allow / deny / review_required / escalate, "
-        "including action_allowed, payment_allowed, agent_can_approve, human_approval_required, "
-        "approval_mode, matched_rules, evidence, next_action, and ttl."
+        "Stop risky AI agent actions before they happen.\n\n"
+        "Call this API before an agent pays for a paid API or x402 resource, uses an MCP tool, "
+        "runs a GitHub repo, buys a model, or uses memory for a business action.\n\n"
+        "Returns allow, deny, review_required, or escalate, plus reason, matched_rules, evidence, next_action, and ttl."
     ),
 )
 
@@ -397,7 +396,7 @@ def _evaluate_decision(req: PaidResourceReviewRequest) -> tuple[str, str]:
 
 @app.post(
     "/api/paid-resource/review",
-    summary="Pre-action gate for AI agent purchases, paid APIs, x402 resources, MCP tools, GitHub repos, and memory-backed actions.",
+    summary="Pre-action gate: stop risky AI agent actions before they happen.",
     description=(
         "Review whether an AI agent should use or pay for an external resource. "
         "Covers paid APIs, x402 resources, MCP tools, external data sources, and memory-backed decisions. "
@@ -550,32 +549,33 @@ async def root():
 
 @app.get("/llms.txt", include_in_schema=False)
 async def llms_txt():
-    content = """# AI Agent External Resource Review
-# External Control Front Door for AI Agent Stack
+    content = """# Agent Procurement Gate
+Stop risky AI agent actions before they happen.
 
-## Purpose
-Use this API before an AI agent pays for or uses an external resource.
-This is the front door of the AI Agent External Control Stack.
+Use this API before an agent:
+- pays for a paid API or x402 resource
+- uses an MCP tool
+- runs a GitHub repo, CLI, or binary
+- buys a model, dataset, or external service
+- uses memory for a payment or business action
 
-Use agent-paid-resource-control first when an AI agent is about to use or pay for an external resource.
+Returns:
+- allow
+- deny
+- review_required
+- escalate
 
-## Primary use cases
-1. Paid API / x402 Resource Review
-   Decide whether an agent should use or pay for a paid API or x402 resource.
+Also returns:
+- reason
+- matched_rules
+- evidence
+- next_action
+- ttl
 
-2. Tool / MCP / GitHub Repo Review
-   Decide whether an agent should use an external tool, MCP server, GitHub repository, CLI, or binary.
+Do not use this as a generic chatbot safety filter.
+Use it before external actions, paid actions, tool execution, and memory-backed business actions.
 
-3. Memory-backed Payment or CRM Decision Review
-   Decide whether stored memory can be used for a payment, CRM update, or external action decision.
-
-This API returns a pre-action review with decision, risk_level, payment_allowed, and required_checks.
-
-## When to use
-- Before paying for a paid API or x402 resource
-- Before using an external tool, MCP server, or GitHub repository
-- Before making a decision based on stored memory
-- Before modifying a CRM record based on AI judgment
+---
 
 ## External Control Stack routing
 - agent-paid-resource-control: first — review whether an agent should use or pay for an external resource
@@ -583,35 +583,6 @@ This API returns a pre-action review with decision, risk_level, payment_allowed,
 - agent-security-gateway: tool / input / security risk
 - agent-memory-api-bix5: memory use permission / provenance check
 - ai-agent-payment-safety-stack: payment / action / result evidence
-
-## Decision outputs
-
-agent-paid-resource-control returns a pre-action decision before an AI agent uses or pays for an external resource.
-
-Typical decisions:
-1. allow
-   The agent may proceed. Payment may be allowed. Evidence logging may still be required.
-
-2. review_required
-   The agent should pause for additional checks or human approval before proceeding.
-
-3. deny
-   The agent should not use or pay for the resource.
-
-Common output fields:
-- decision
-- risk_level
-- payment_allowed
-- required_checks
-- reason
-
-required_checks may include:
-- reputation_signal_audit
-- budget_policy_check
-- memory_use_permission_check
-- payment_evidence_required
-- tool_install_approval_gate
-- customer_data_boundary_check
 
 ## Main endpoint
 POST /api/paid-resource/review
@@ -646,11 +617,7 @@ async def agent_json():
         "version": "0.1.0",
         "experimental": True,
         "live": True,
-        "description": (
-            "Pre-purchase and pre-action control API for AI agents. "
-            "Before an AI agent buys, pays for, executes, or relies on an external resource, "
-            "returns allow/deny/review_required/escalate with machine-readable evidence and next_action."
-        ),
+        "description": "Stops risky AI agent actions before they happen. Use before paid APIs, x402 payments, MCP tools, repo execution, model purchases, or memory-backed business actions. Returns allow, deny, review_required, or escalate.",
         "endpoints": [
             {
                 "path": "/api/paid-resource/review",
@@ -660,12 +627,14 @@ async def agent_json():
             }
         ],
         "use_when": [
-            "Before an AI agent pays for a paid API, x402 resource, model, dataset, or MCP service",
-            "Before an AI agent executes an external tool, MCP server, GitHub repository, CLI, or binary",
-            "Before an AI agent uses stored memory to make a payment, CRM update, or external action decision",
-            "When another agent needs machine-readable evidence before approving an economic action",
+            "Before an agent pays for a paid API or x402 resource",
+            "Before an agent uses an MCP tool",
+            "Before an agent runs a GitHub repo, CLI, or binary",
+            "Before an agent buys a model, dataset, or external service",
+            "Before an agent uses memory for a payment or business action",
         ],
         "do_not_use_when": "generic chatbot safety filtering or non-agent use cases",
+        "returns": ["allow", "deny", "review_required", "escalate", "reason", "matched_rules", "evidence", "next_action", "ttl"],
         "constraints": [
             "does_not_execute_payments",
             "does_not_handle_private_keys",

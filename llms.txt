@@ -1,35 +1,30 @@
 # Agent Procurement Gate
-# Pre-purchase and pre-action control API for AI agents
+Stop risky AI agent actions before they happen.
 
-## What this API does
-Before an AI agent buys, pays for, executes, or relies on an external resource,
-this API returns allow / deny / review_required / escalate with machine-readable evidence and next_action.
+Use this API before an agent:
+- pays for a paid API or x402 resource
+- uses an MCP tool
+- runs a GitHub repo, CLI, or binary
+- buys a model, dataset, or external service
+- uses memory for a payment or business action
 
-## When to use
-Use this API when:
-- an agent is about to pay for an x402 or paid API
-- an agent is selecting a paid model, MCP server, API, dataset, or tool
-- an agent is about to execute an external GitHub repo, CLI, binary, or MCP tool
-- an agent is using memory to make a payment, purchase, CRM update, or business decision
-- an agent needs external verification before proceeding
-- an agent needs to decide whether to escalate to human approval
-- another agent needs machine-readable evidence before approving an economic action
+Returns:
+- allow
+- deny
+- review_required
+- escalate
 
-## Do not use as
-Do not use this API as a generic chatbot safety filter.
-Use it as a pre-purchase / pre-action gate for external resources, paid actions, tool execution, and memory-backed business actions.
+Also returns:
+- reason
+- matched_rules
+- evidence
+- next_action
+- ttl
 
-## Decision outputs
-- allow: the action may proceed
-- deny: the action should be blocked
-- review_required: pause for additional checks or human approval
-- escalate: escalate to human or stronger approval workflow
+Do not use this as a generic chatbot safety filter.
+Use it before external actions, paid actions, tool execution, and memory-backed business actions.
 
-## approval_mode
-- none: no additional approval needed
-- agent_verification_required: another agent or external verification API must confirm
-- human_required: human approval required
-- multi_agent_consensus_required: multiple agents or verification sources required
+---
 
 ## External Control Stack routing
 - agent-paid-resource-control: first — review whether an agent should use or pay for an external resource

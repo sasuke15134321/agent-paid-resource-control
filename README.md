@@ -1,17 +1,16 @@
 # Agent Procurement Gate
 
-Pre-purchase and pre-action control API for AI agents.
+Stop risky AI agent actions before they happen.
 
-Before an AI agent buys, pays for, executes, or relies on an external resource, this API returns:
+Call this API before an agent pays for a paid API or x402 resource, uses an MCP tool, runs a GitHub repo, buys a model, or uses memory for a business action.
+
+Returns:
 - **allow**: the action may proceed
 - **deny**: the action should be blocked
 - **review_required**: pause for additional checks or human approval
 - **escalate**: escalate to human or stronger approval workflow
 
-Each response includes `action_allowed`, `payment_allowed`, `agent_can_approve`, `human_approval_required`, `approval_mode`, `matched_rules`, `evidence`, `next_action`, and `ttl`.
-
-This is not a payment protocol, wallet, settlement layer, legal compliance system, or official standard.
-Not affiliated with AWS, Coinbase, Arc, Circle, or any payment network.
+Also returns `reason`, `matched_rules`, `evidence`, `next_action`, and `ttl`.
 
 ---
 

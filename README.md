@@ -1,14 +1,14 @@
-# Agent Paid Resource Control
+# Agent Procurement Gate
 
-An experimental external control layer for AI agents that pay for web content, APIs, data, and financial workflow resources.
+Pre-purchase and pre-action control API for AI agents.
 
-Use `POST /api/paid-resource/review` before paying for a resource to understand:
-- resource binding requirements
-- duplicate payment risk
-- metadata privacy status
-- fulfillment requirements
-- evidence receipt fields
-- reconciliation guidance
+Before an AI agent buys, pays for, executes, or relies on an external resource, this API returns:
+- **allow**: the action may proceed
+- **deny**: the action should be blocked
+- **review_required**: pause for additional checks or human approval
+- **escalate**: escalate to human or stronger approval workflow
+
+Each response includes `action_allowed`, `payment_allowed`, `agent_can_approve`, `human_approval_required`, `approval_mode`, `matched_rules`, `evidence`, `next_action`, and `ttl`.
 
 This is not a payment protocol, wallet, settlement layer, legal compliance system, or official standard.
 Not affiliated with AWS, Coinbase, Arc, Circle, or any payment network.

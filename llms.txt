@@ -1,29 +1,35 @@
-# AI Agent External Resource Review
-# External Control Front Door for AI Agent Stack
+# Agent Procurement Gate
+# Pre-purchase and pre-action control API for AI agents
 
-## Purpose
-Use this API before an AI agent pays for or uses an external resource.
-This is the front door of the AI Agent External Control Stack.
-
-Use agent-paid-resource-control first when an AI agent is about to use or pay for an external resource.
-
-## Primary use cases
-1. Paid API / x402 Resource Review
-   Decide whether an agent should use or pay for a paid API or x402 resource.
-
-2. Tool / MCP / GitHub Repo Review
-   Decide whether an agent should use an external tool, MCP server, GitHub repository, CLI, or binary.
-
-3. Memory-backed Payment or CRM Decision Review
-   Decide whether stored memory can be used for a payment, CRM update, or external action decision.
-
-This API returns a pre-action review with decision, risk_level, payment_allowed, and required_checks.
+## What this API does
+Before an AI agent buys, pays for, executes, or relies on an external resource,
+this API returns allow / deny / review_required / escalate with machine-readable evidence and next_action.
 
 ## When to use
-- Before paying for a paid API or x402 resource
-- Before using an external tool, MCP server, or GitHub repository
-- Before making a decision based on stored memory
-- Before modifying a CRM record based on AI judgment
+Use this API when:
+- an agent is about to pay for an x402 or paid API
+- an agent is selecting a paid model, MCP server, API, dataset, or tool
+- an agent is about to execute an external GitHub repo, CLI, binary, or MCP tool
+- an agent is using memory to make a payment, purchase, CRM update, or business decision
+- an agent needs external verification before proceeding
+- an agent needs to decide whether to escalate to human approval
+- another agent needs machine-readable evidence before approving an economic action
+
+## Do not use as
+Do not use this API as a generic chatbot safety filter.
+Use it as a pre-purchase / pre-action gate for external resources, paid actions, tool execution, and memory-backed business actions.
+
+## Decision outputs
+- allow: the action may proceed
+- deny: the action should be blocked
+- review_required: pause for additional checks or human approval
+- escalate: escalate to human or stronger approval workflow
+
+## approval_mode
+- none: no additional approval needed
+- agent_verification_required: another agent or external verification API must confirm
+- human_required: human approval required
+- multi_agent_consensus_required: multiple agents or verification sources required
 
 ## External Control Stack routing
 - agent-paid-resource-control: first — review whether an agent should use or pay for an external resource
@@ -31,35 +37,6 @@ This API returns a pre-action review with decision, risk_level, payment_allowed,
 - agent-security-gateway: tool / input / security risk
 - agent-memory-api-bix5: memory use permission / provenance check
 - ai-agent-payment-safety-stack: payment / action / result evidence
-
-## Decision outputs
-
-agent-paid-resource-control returns a pre-action decision before an AI agent uses or pays for an external resource.
-
-Typical decisions:
-1. allow
-   The agent may proceed. Payment may be allowed. Evidence logging may still be required.
-
-2. review_required
-   The agent should pause for additional checks or human approval before proceeding.
-
-3. deny
-   The agent should not use or pay for the resource.
-
-Common output fields:
-- decision
-- risk_level
-- payment_allowed
-- required_checks
-- reason
-
-required_checks may include:
-- reputation_signal_audit
-- budget_policy_check
-- memory_use_permission_check
-- payment_evidence_required
-- tool_install_approval_gate
-- customer_data_boundary_check
 
 ## Main endpoint
 POST /api/paid-resource/review

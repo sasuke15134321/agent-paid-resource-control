@@ -35,23 +35,14 @@ DANGEROUS_PATTERNS = [
 ]
 
 app = FastAPI(
-    title="AI Agent External Resource Review",
+    title="Agent Procurement Gate",
     version="0.1.0",
     description=(
-        "AI Agent External Resource Review helps AI agents decide whether they should use or pay for an external resource before taking action.\n\n"
-        "Use it before:\n"
-        "- paying for a paid API or x402 resource\n"
-        "- using an external tool, MCP server, GitHub repository, CLI, or binary\n"
-        "- using stored memory for a payment, CRM update, or external action decision\n\n"
-        "The review returns decision, risk_level, payment_allowed, and required_checks such as "
-        "reputation_signal_audit, budget_policy_check, memory_use_permission_check, "
-        "tool_install_approval_gate, and payment_evidence_required.\n\n"
-        "This API returns a pre-action review for AI agents.\n\n"
-        "The review can return:\n"
-        "- allow: proceed with the resource, usually with evidence logging\n"
-        "- review_required: pause for additional checks or approval\n"
-        "- deny: do not use or pay for the resource\n\n"
-        "Each review includes decision, risk_level, payment_allowed, required_checks, and reason."
+        "Agent Procurement Gate: Pre-purchase and pre-action control API for AI agents. "
+        "Before an AI agent buys, pays for, executes, or relies on an external resource, "
+        "this API returns a machine-readable decision with allow / deny / review_required / escalate, "
+        "including action_allowed, payment_allowed, agent_can_approve, human_approval_required, "
+        "approval_mode, matched_rules, evidence, next_action, and ttl."
     ),
 )
 
@@ -236,6 +227,33 @@ _BAZAAR_EXTENSIONS = {
                             "reason": "The resource requires external tool installation and may affect customer data without sufficient provenance.",
                         },
                     },
+                    "example_e_human_approval_required": {
+                        "expected_output": {
+                            "decision": "review_required",
+                            "risk_level": "medium",
+                            "action_allowed": False,
+                            "payment_allowed": False,
+                            "agent_can_approve": False,
+                            "human_approval_required": True,
+                            "approval_mode": "human_required",
+                            "reason": "The agent is about to pay for a new external API using stored memory.",
+                            "matched_rules": [
+                                "requires_payment",
+                                "new_merchant",
+                                "memory_affects_payment",
+                            ],
+                            "evidence": {
+                                "action_type": "paid_api_call",
+                                "resource_type": "x402_resource",
+                                "price": "0.05 USDC",
+                                "merchant_seen_before": False,
+                                "uses_memory": True,
+                                "budget_remaining": "1.20 USDC",
+                            },
+                            "next_action": "request_human_approval",
+                            "ttl": "300s",
+                        },
+                    },
                 },
             },
         },
@@ -379,7 +397,7 @@ def _evaluate_decision(req: PaidResourceReviewRequest) -> tuple[str, str]:
 
 @app.post(
     "/api/paid-resource/review",
-    summary="Review a paid resource access request",
+    summary="Pre-action gate for AI agent purchases, paid APIs, x402 resources, MCP tools, GitHub repos, and memory-backed actions.",
     description=(
         "Review whether an AI agent should use or pay for an external resource. "
         "Covers paid APIs, x402 resources, MCP tools, external data sources, and memory-backed decisions. "
@@ -624,29 +642,30 @@ Not affiliated with AWS, Coinbase, Arc, Circle, or any payment network.
 @app.get("/.well-known/agent.json", include_in_schema=False)
 async def agent_json():
     return {
-        "name": "Agent Paid Resource Control",
+        "name": "Agent Procurement Gate",
         "version": "0.1.0",
         "experimental": True,
         "live": True,
         "description": (
-            "AI Agent External Resource Review. Front door of the AI Agent External Control Stack. "
-            "Use before an AI agent pays for or uses an external resource."
+            "Pre-purchase and pre-action control API for AI agents. "
+            "Before an AI agent buys, pays for, executes, or relies on an external resource, "
+            "returns allow/deny/review_required/escalate with machine-readable evidence and next_action."
         ),
         "endpoints": [
             {
                 "path": "/api/paid-resource/review",
                 "method": "POST",
-                "description": "Review paid resource access before payment",
+                "description": "Pre-action gate for AI agent purchases, paid APIs, x402 resources, MCP tools, GitHub repos, and memory-backed actions.",
                 "pricing": {"amount": "0.03", "currency": "USDC", "protocol": "x402"},
             }
         ],
-        "use_cases": [
-            "agent_paid_resource_review",
-            "duplicate_payment_prevention",
-            "metadata_privacy_check",
-            "resource_binding_verification",
-            "evidence_receipt_fields",
+        "use_when": [
+            "Before an AI agent pays for a paid API, x402 resource, model, dataset, or MCP service",
+            "Before an AI agent executes an external tool, MCP server, GitHub repository, CLI, or binary",
+            "Before an AI agent uses stored memory to make a payment, CRM update, or external action decision",
+            "When another agent needs machine-readable evidence before approving an economic action",
         ],
+        "do_not_use_when": "generic chatbot safety filtering or non-agent use cases",
         "constraints": [
             "does_not_execute_payments",
             "does_not_handle_private_keys",
@@ -662,11 +681,11 @@ async def agent_json():
             "purpose": "Review paid data lookup requests before an AI agent pays for market data, crypto data, token metadata, onchain data, or news data via x402.",
             "use_when": [
                 "Before an AI agent pays for a paid API or x402 resource",
-                "Before an AI agent uses an external MCP tool, GitHub repository, CLI, or binary",
+                "Before an AI agent executes an external MCP tool, GitHub repository, CLI, or binary",
                 "Before an AI agent uses stored memory to make a payment, CRM update, or external action decision",
             ],
             "key_fields": ["resource_type", "payment_purpose", "freshness_required_seconds", "expected_result"],
-            "returns": "pre-action decision with allow, review_required, or deny, including risk_level, payment_allowed, required_checks, and reason",
+            "returns": "pre-action decision with allow, review_required, deny, or escalate, including action_allowed, payment_allowed, agent_can_approve, human_approval_required, approval_mode, matched_rules, evidence, next_action, and ttl",
         },
     }
 

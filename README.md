@@ -1,16 +1,16 @@
 # Agent Procurement Gate
 
-Stop risky AI agent actions before they happen.
+Move faster. Spend safer. Leave evidence.
 
-Call this API before an agent pays for a paid API or x402 resource, uses an MCP tool, runs a GitHub repo, buys a model, or uses memory for a business action.
+Agent Procurement Gate helps AI agents use paid APIs, x402 resources, MCP tools, repos, models, and memory-backed actions without acting blindly.
 
-Returns:
-- **allow**: the action may proceed
-- **deny**: the action should be blocked
-- **review_required**: pause for additional checks or human approval
-- **escalate**: escalate to human or stronger approval workflow
+It reviews planned external actions before they happen and returns:
+- **allow**
+- **deny**
+- **review_required**
+- **escalate**
 
-Also returns `reason`, `matched_rules`, `evidence`, `next_action`, and `ttl`.
+It also returns the reason, matched rules, evidence, and next action.
 
 ---
 

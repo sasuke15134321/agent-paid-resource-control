@@ -38,10 +38,12 @@ app = FastAPI(
     title="Agent Procurement Gate",
     version="0.1.0",
     description=(
-        "Stop risky AI agent actions before they happen.\n\n"
-        "Call this API before an agent pays for a paid API or x402 resource, uses an MCP tool, "
-        "runs a GitHub repo, buys a model, or uses memory for a business action.\n\n"
-        "Returns allow, deny, review_required, or escalate, plus reason, matched_rules, evidence, next_action, and ttl."
+        "Move faster. Spend safer. Leave evidence.\n\n"
+        "Review a planned AI agent action before it happens.\n\n"
+        "Use this endpoint before an agent pays for a paid API or x402 resource, uses an MCP tool, "
+        "runs a repo, buys a model, or uses memory for a business action.\n\n"
+        "Returns allow, deny, review_required, or escalate, with reason, matched_rules, evidence, next_action, and ttl.\n\n"
+        "Helps agents allow safe actions, avoid risky paid actions, and leave evidence for audit or review."
     ),
 )
 
@@ -396,7 +398,7 @@ def _evaluate_decision(req: PaidResourceReviewRequest) -> tuple[str, str]:
 
 @app.post(
     "/api/paid-resource/review",
-    summary="Pre-action gate: stop risky AI agent actions before they happen.",
+    summary="Pre-action gate for AI agent payments and external actions",
     description=(
         "Review whether an AI agent should use or pay for an external resource. "
         "Covers paid APIs, x402 resources, MCP tools, external data sources, and memory-backed decisions. "
@@ -550,6 +552,9 @@ async def root():
 @app.get("/llms.txt", include_in_schema=False)
 async def llms_txt():
     content = """# Agent Procurement Gate
+
+Move faster. Spend safer. Leave evidence.
+
 Stop risky AI agent actions before they happen.
 
 Use this API before an agent:
@@ -571,6 +576,19 @@ Also returns:
 - evidence
 - next_action
 - ttl
+
+Why use it:
+- move faster by allowing safe actions to proceed
+- spend safer by avoiding risky or duplicate paid actions
+- leave evidence for later audit or review
+
+Detailed benefits:
+- helps prevent unauthorized agent spending
+- helps block risky external tool execution
+- helps reduce duplicate paid calls
+- routes uncertain actions to review
+- produces evidence for later audit
+- helps agents choose safer external resources
 
 Do not use this as a generic chatbot safety filter.
 Use it before external actions, paid actions, tool execution, and memory-backed business actions.
@@ -617,7 +635,8 @@ async def agent_json():
         "version": "0.1.0",
         "experimental": True,
         "live": True,
-        "description": "Stops risky AI agent actions before they happen. Use before paid APIs, x402 payments, MCP tools, repo execution, model purchases, or memory-backed business actions. Returns allow, deny, review_required, or escalate.",
+        "description": "Move faster. Spend safer. Leave evidence. Stops risky AI agent actions before they happen. Use before paid APIs, x402 payments, MCP tools, repo execution, model purchases, or memory-backed business actions.",
+        "benefits": ["Move faster", "Spend safer", "Leave evidence"],
         "endpoints": [
             {
                 "path": "/api/paid-resource/review",

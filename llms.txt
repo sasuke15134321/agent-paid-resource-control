@@ -1,4 +1,7 @@
 # Agent Procurement Gate
+
+Move faster. Spend safer. Leave evidence.
+
 Stop risky AI agent actions before they happen.
 
 Use this API before an agent:
@@ -20,6 +23,19 @@ Also returns:
 - evidence
 - next_action
 - ttl
+
+Why use it:
+- move faster by allowing safe actions to proceed
+- spend safer by avoiding risky or duplicate paid actions
+- leave evidence for later audit or review
+
+Detailed benefits:
+- helps prevent unauthorized agent spending
+- helps block risky external tool execution
+- helps reduce duplicate paid calls
+- routes uncertain actions to review
+- produces evidence for later audit
+- helps agents choose safer external resources
 
 Do not use this as a generic chatbot safety filter.
 Use it before external actions, paid actions, tool execution, and memory-backed business actions.

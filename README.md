@@ -70,3 +70,52 @@ Call this endpoint **before** an AI agent executes a paid resource access:
 
 This is an independent experimental project. Not production-ready, not certified, not an official standard.
 Not affiliated with AWS, Coinbase, Arc, Circle, Anthropic, or any payment network.
+
+---
+
+## Scale-Aware Agent Control
+
+Agent Procurement Gate supports scale-aware review of AI agent actions.
+
+Use the right scale for memory, tokens, audit, and throughput.
+
+Review agent actions at the right scale:
+- S0: tool_call
+- S1: action
+- S2: task
+- S3: session
+- S4: agent
+- S5: workflow
+- S6: market
+
+At each scale, the gate helps check:
+- Goal: is this action aligned with the original purpose?
+- Evidence: what is the basis for this action?
+- Action: what is being executed or attempted?
+- Outcome: what is the result?
+- Cost: are token, API cost, latency, and payment proportionate?
+- Memory: what context or memory is being used?
+- Throughput: does this action help or block overall progress?
+
+---
+
+## Agent Modulor
+
+Agent Modulor is the internal design concept behind Scale-Aware Agent Control.
+
+Just as architectural modulor systems define standard scale units based on human proportion, Agent Modulor defines standard review scales for AI agent judgment: S0 tool_call through S6 market.
+
+The goal is not to audit everything at every scale. The goal is to move between scales when needed:
+
+Scale down when:
+- evidence is missing
+- execution result is unclear
+- failure cause needs to be isolated
+
+Scale up when:
+- a specialist agent is stopping too much
+- human approval is occurring too often
+- token or payment cost is not proportionate to outcome
+- overall purpose is being lost
+
+Throughput Anchor: safe actions should proceed. Risky actions should be stopped. Uncertain actions should be reviewed at the right scale.

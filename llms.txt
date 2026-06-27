@@ -71,3 +71,21 @@ After payment, record:
 ## Non-goals
 Not a payment protocol, wallet, settlement layer, legal compliance system, or official standard.
 Not affiliated with AWS, Coinbase, Arc, Circle, or any payment network.
+
+## Scale-aware review
+
+This API supports scale-aware review of AI agent actions.
+
+Use it to review actions at the right scale:
+- S0: tool_call
+- S1: action (paid API, x402, MCP tool, repo, memory-backed action)
+- S2: task
+- S3: session
+- S4: agent
+- S5: workflow
+- S6: market
+
+At each scale, check: Goal / Evidence / Action / Outcome / Cost / Memory / Throughput
+
+Scale down when evidence is missing or failure cause is unclear.
+Scale up when a specialist agent is stopping too much or overall purpose is being lost.

@@ -255,6 +255,25 @@ _BAZAAR_EXTENSIONS = {
                             "ttl": "300s",
                         },
                     },
+                    "example_f_scale_control": {
+                        "expected_output": {
+                            "current_scale": "task",
+                            "scale_level": "S2",
+                            "recommended_next_scale": "session",
+                            "scale_reason": "Specialist agents disagree. Review at workflow throughput level.",
+                        },
+                    },
+                    "example_g_modular_trace": {
+                        "expected_output": {
+                            "goal": "Complete the deployment validation without rerunning completed work.",
+                            "evidence": ["commit confirmed", "smoke test passed", "A rating maintained"],
+                            "action": "enter observation phase",
+                            "outcome": "pending log observation",
+                            "cost": {"tokens": 3200, "tool_calls": 0, "api_cost": "0 USDC"},
+                            "memory": {"scope": "task_summary", "relevance": "high"},
+                            "throughput": {"impact": "positive", "reason": "Avoids unnecessary rerun."},
+                        },
+                    },
                 },
             },
         },
@@ -624,6 +643,24 @@ After payment, record:
 ## Non-goals
 Not a payment protocol, wallet, settlement layer, legal compliance system, or official standard.
 Not affiliated with AWS, Coinbase, Arc, Circle, or any payment network.
+
+## Scale-aware review
+
+This API supports scale-aware review of AI agent actions.
+
+Use it to review actions at the right scale:
+- S0: tool_call
+- S1: action (paid API, x402, MCP tool, repo, memory-backed action)
+- S2: task
+- S3: session
+- S4: agent
+- S5: workflow
+- S6: market
+
+At each scale, check: Goal / Evidence / Action / Outcome / Cost / Memory / Throughput
+
+Scale down when evidence is missing or failure cause is unclear.
+Scale up when a specialist agent is stopping too much or overall purpose is being lost.
 """
     return PlainTextResponse(content)
 
@@ -654,6 +691,7 @@ async def agent_json():
         ],
         "do_not_use_when": "generic chatbot safety filtering or non-agent use cases",
         "returns": ["allow", "deny", "review_required", "escalate", "reason", "matched_rules", "evidence", "next_action", "ttl"],
+        "supports": ["scale_aware_agent_control"],
         "constraints": [
             "does_not_execute_payments",
             "does_not_handle_private_keys",

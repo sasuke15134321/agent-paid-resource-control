@@ -89,3 +89,28 @@ At each scale, check: Goal / Evidence / Action / Outcome / Cost / Memory / Throu
 
 Scale down when evidence is missing or failure cause is unclear.
 Scale up when a specialist agent is stopping too much or overall purpose is being lost.
+
+## Agent Quality Boundary
+
+Read evidence first. Stay aligned with the goal. Explain only what can be observed.
+
+Use this mode before an agent:
+- classifies a new user input
+- treats a completion report as a new task
+- claims information is missing
+- reruns a completed task
+- explains why it failed
+- makes a causal claim about an internal model behavior
+
+Checks:
+- Evidence-before-Workflow
+- Purpose Drift Check
+- Missing-Info Claim Guard
+- Causal Claim Guard
+- Failure Explanation Receipt
+
+Do not claim missing information until the latest input has been checked.
+
+Do not explain failures using unobservable internal causes such as training data, RLHF, model weights, or hidden model behavior.
+
+If the input is a completion report, do not treat it as a new task unless the user explicitly asks for new work.

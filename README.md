@@ -73,7 +73,42 @@ Not affiliated with AWS, Coinbase, Arc, Circle, Anthropic, or any payment networ
 
 ---
 
+## Agent Quality Boundary
+
+Read evidence first. Stay aligned with the goal. Explain only what can be observed.
+
+Agent Quality Boundary helps AI agents avoid workflow drift, missing-info mistakes, purpose drift, and unsupported failure explanations.
+
+Use this mode when an agent is about to:
+- classify a new input
+- treat a completion report as a new task
+- claim that information is missing
+- explain why it failed
+- decide whether to rerun, retry, ask for more information, or stop
+- use prior context or expected workflow to interpret new evidence
+
+Quality checks:
+
+1. Evidence-before-Workflow
+   Read the latest input as evidence before forcing it into an expected workflow.
+
+2. Purpose Drift Check
+   Check whether the planned action still serves the user's original goal.
+
+3. Missing-Info Claim Guard
+   Before claiming information is missing, check whether the latest input already contains it.
+
+4. Causal Claim Guard
+   Do not claim internal or unobservable causes such as training data, RLHF, model weights, or hidden system behavior unless directly observable.
+
+5. Failure Explanation Receipt
+   When explaining a failure, separate observed facts, executed steps, inferred causes, unknown causes, and next prevention steps.
+
+---
+
 ## Scale-Aware Agent Control
+
+Scale-Aware Agent Control is a supporting structure for Agent Quality Boundary. It helps adjust the review depth from small input checks to large multi-step agent actions.
 
 Agent Procurement Gate supports scale-aware review of AI agent actions.
 

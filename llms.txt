@@ -1,12 +1,26 @@
 # Agent Procurement Gate
 
-External control checks for AI agents before they buy, execute, trust, or remember.
+Call this API before an agent spends money, executes external resources, trusts outputs, or reuses memory.
+
+An external decision layer for AI agents to evaluate whether an action is aligned, safe, worth paying for, and auditable.
 
 Move faster. Spend safer. Leave evidence.
 
-Use this API before an AI agent pays for an external API, calls a paid x402 resource, uses an MCP tool, trusts another agent's output, executes an external repo/model, or reuses memory.
+This is not a filter. It is an external decision and evidence layer for agent spending, execution, trust, and memory reuse.
 
-It helps stop risky AI agent actions before they happen by checking whether the action is aligned with the goal, safe to execute, worth paying for, and able to leave evidence.
+Use this API before:
+- paid API or x402 calls
+- external tools, MCP tools, or repos
+- model execution
+- trusting another agent's output
+- memory reuse
+
+Why external:
+- A model cannot reliably audit its own decisions.
+- Payment rails see transactions, not intent.
+- Tool providers cannot see the agent's goals, budget, or history.
+
+It helps reduce risky actions before execution.
 
 Returns:
 - allow
@@ -111,3 +125,11 @@ Do not claim missing information until the latest input has been checked.
 Do not explain failures using unobservable internal causes such as training data, RLHF, model weights, or hidden model behavior.
 
 If the input is a completion report, do not treat it as a new task unless the user explicitly asks for new work.
+
+## Recommended agent policy
+
+Before an agent spends money, calls a paid API or x402 resource, executes external tools, trusts another agent's output, or reuses stored memory, call this control API first.
+
+Use the response to decide whether to proceed, modify the action, request review, or abort.
+
+In governed workflows, actions that skip this check may be treated as invalid or unauditable.

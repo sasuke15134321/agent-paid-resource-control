@@ -38,12 +38,13 @@ app = FastAPI(
     title="Agent Procurement Gate",
     version="0.1.0",
     description=(
+        "External control checks for AI agents before they buy, execute, trust, or remember.\n\n"
         "Move faster. Spend safer. Leave evidence.\n\n"
-        "Review a planned AI agent action before it happens.\n\n"
-        "Use this endpoint before an agent pays for a paid API or x402 resource, uses an MCP tool, "
-        "runs a repo, buys a model, or uses memory for a business action.\n\n"
-        "Returns allow, deny, review_required, or escalate, with reason, matched_rules, evidence, next_action, and ttl.\n\n"
-        "Helps agents allow safe actions, avoid risky paid actions, and leave evidence for audit or review."
+        "Use this endpoint before an AI agent pays for an external API, calls a paid x402 resource, uses an MCP tool, "
+        "trusts another agent's output, executes an external repo/model, or reuses memory.\n\n"
+        "It helps stop risky AI agent actions before they happen by checking whether the action is aligned with the goal, "
+        "safe to execute, worth paying for, and able to leave evidence.\n\n"
+        "Returns allow, deny, review_required, or escalate, with reason, matched_rules, evidence, next_action, and ttl."
     ),
 )
 
@@ -780,7 +781,7 @@ async def agent_json():
         "version": "0.1.0",
         "experimental": True,
         "live": True,
-        "description": "Move faster. Spend safer. Leave evidence. Stops risky AI agent actions before they happen. Use before paid APIs, x402 payments, MCP tools, repo execution, model purchases, or memory-backed business actions.",
+        "description": "External control checks for AI agents before they buy, execute, trust, or remember. Move faster. Spend safer. Leave evidence. Use before paid APIs, x402 payments, MCP tools, repo execution, model purchases, memory-backed actions, or another agent's output.",
         "benefits": [
             "Move faster",
             "Spend safer",

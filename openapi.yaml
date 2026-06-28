@@ -3,9 +3,11 @@ info:
   title: Agent Paid Resource Control
   version: "0.1.0"
   description: >
-    An experimental external control layer for AI agents that pay for web content,
-    APIs, data, and financial workflow resources.
-    Use POST /api/paid-resource/review before paying for a resource.
+    External control checks for AI agents before they buy, execute, trust, or remember.
+    Move faster. Spend safer. Leave evidence.
+    Use this endpoint before an AI agent pays for an external API, calls a paid x402 resource, uses an MCP tool, trusts another agent's output, executes an external repo/model, or reuses memory.
+    It helps stop risky AI agent actions before they happen by checking whether the action is aligned with the goal, safe to execute, worth paying for, and able to leave evidence.
+    Returns allow, deny, review_required, or escalate, with reason, matched_rules, evidence, next_action, and ttl.
     Not a payment protocol, wallet, settlement layer, or official standard.
   x-guidance: >
     Call POST /api/paid-resource/review before an AI agent pays for a resource.

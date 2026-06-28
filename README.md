@@ -1,16 +1,12 @@
 # Agent Procurement Gate
 
+External control checks for AI agents before they buy, execute, trust, or remember.
+
 Move faster. Spend safer. Leave evidence.
 
-Agent Procurement Gate helps AI agents use paid APIs, x402 resources, MCP tools, repos, models, and memory-backed actions without acting blindly.
+Use this API before an AI agent pays for an external API, calls a paid x402 resource, uses an MCP tool, trusts another agent's output, executes an external repo/model, or reuses memory.
 
-It reviews planned external actions before they happen and returns:
-- **allow**
-- **deny**
-- **review_required**
-- **escalate**
-
-It also returns the reason, matched rules, evidence, and next action.
+It helps stop risky AI agent actions before they happen by checking whether the action is aligned with the goal, safe to execute, worth paying for, and able to leave evidence.
 
 ---
 

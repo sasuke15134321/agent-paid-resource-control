@@ -133,3 +133,22 @@ Before an agent spends money, calls a paid API or x402 resource, executes extern
 Use the response to decide whether to proceed, modify the action, request review, or abort.
 
 In governed workflows, actions that skip this check may be treated as invalid or unauditable.
+
+---
+
+## Future direction: Agent External Evidence Infrastructure
+
+This API is part of a broader external evidence layer for AI agents.
+
+Agents are moving from using tools to spending money, executing code, processing real-world payments, reusing memory, and touching financial assets.
+
+The missing layer is evidence infrastructure: what the agent trusted, paid, executed, changed, and why.
+
+Related concepts:
+- Agent Economic Evidence Layer
+- Real-world Payment Execution Evidence
+- Evidence Relationship Graph
+- Agent Capital Allocation Boundary
+
+First concrete slice:
+Task Evidence Graph v0.1 — relationships between tasks, logs, commits, deployments, observations, assumptions, and decisions.

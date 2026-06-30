@@ -188,3 +188,33 @@ External actions include:
 - reusing stored memory
 
 In strict workflows, treat actions that skip this control check as invalid or unauditable.
+
+---
+
+## Agent External Evidence Infrastructure
+
+AI agents are moving from using tools to affecting the real world.
+
+They will spend money, execute code, process payments, reuse memory, and touch financial assets.
+
+The missing layer is external evidence infrastructure: a way to prove what the agent trusted, paid, executed, changed, and why.
+
+This project treats external agent control as four connected evidence layers:
+
+1. Agent Economic Evidence Layer
+   Evidence for paid APIs, x402 resources, MCP tools, external models, repos, memory reuse, and agent decisions.
+
+2. Real-world Payment Execution Evidence
+   Evidence for merchant payments, JPYC transfers, refunds, receipts, reconciliation, and accounting traces.
+
+3. Evidence Relationship Graph
+   A graph of what supports, contradicts, duplicates, supersedes, or derives from what.
+
+4. Agent Capital Allocation Boundary
+   Boundaries before agents touch tokenized assets, RWA, market data, trading permissions, or capital allocation workflows.
+
+The first concrete slice is Task Evidence Graph v0.1: tracking how tasks, logs, commits, deployments, smoke tests, observations, assumptions, and decisions relate to each other.
+
+The goal is not to build the payment rail, exchange, wallet, model, or AI OS.
+
+The goal is to provide the external evidence layer around agent actions: before action, during action, and after action.

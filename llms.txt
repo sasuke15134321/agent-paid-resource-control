@@ -152,3 +152,18 @@ Related concepts:
 
 First concrete slice:
 Task Evidence Graph v0.1 — relationships between tasks, logs, commits, deployments, observations, assumptions, and decisions.
+
+---
+
+## Future direction: Evidence Relationship Graph
+
+AI agents do not just need more memory.
+
+They need a relationship map.
+
+Evidence Relationship Graph tracks what supports, contradicts, duplicates, supersedes, authorizes, or explains what.
+
+Use it to stop agents from guessing relationships between logs, files, payments, memory, and decisions.
+
+First concrete slice:
+Task Evidence Graph v0.1.

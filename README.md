@@ -218,3 +218,29 @@ The first concrete slice is Task Evidence Graph v0.1: tracking how tasks, logs, 
 The goal is not to build the payment rail, exchange, wallet, model, or AI OS.
 
 The goal is to provide the external evidence layer around agent actions: before action, during action, and after action.
+
+---
+
+## Evidence Relationship Graph
+
+The real problem for AI agents is not a lack of information, but a lack of relationships between evidence.
+
+Logs, files, payments, receipts, memory, and decisions may all exist.
+
+The failure happens when the agent has to guess how they relate.
+
+Evidence Relationship Graph externalizes those relationships.
+
+It tracks what:
+- supports
+- contradicts
+- duplicates
+- supersedes
+- authorizes
+- derives from
+- explains
+- requires confirmation
+
+The goal is to stop making agents guess relationships between logs, files, payments, and decisions.
+
+AIエージェントの本当の課題は、情報不足ではなく関係不足です。ログ、ファイル、支払い、領収書、メモリ、判断は存在していても、それらがどう関係しているかをAIが毎回推測するためにズレが起きます。Evidence Relationship Graph は、その関係を外部化するための構造です。

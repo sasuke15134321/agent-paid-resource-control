@@ -93,4 +93,10 @@ paths:
                     items:
                       type: string
         "402":
-          description: Payment required (x402)
+          description: >
+            Payment required (x402).
+            A 402 response means the protected endpoint was reached and payment is required.
+            The client should read the x402 payment requirements from the response,
+            complete payment using a compatible x402 client or wallet,
+            and retry the same request with valid payment proof.
+            A successful paid retry should return 200 OK.

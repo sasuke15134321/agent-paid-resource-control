@@ -506,6 +506,18 @@ def _evaluate_decision(req: PaidResourceReviewRequest) -> tuple[str, str]:
     ),
     tags=["Paid Resource Control"],
     include_in_schema=True,
+    responses={
+        402: {
+            "description": (
+                "Payment required (x402). "
+                "A 402 response means the protected endpoint was reached and payment is required. "
+                "The client should read the x402 payment requirements from the response, "
+                "complete payment using a compatible x402 client or wallet, "
+                "and retry the same request with valid payment proof. "
+                "A successful paid retry should return 200 OK."
+            )
+        }
+    },
 )
 async def paid_resource_review(payload: PaidResourceReviewRequest, request: Request):
     payment_header = (
@@ -717,6 +729,25 @@ Use it before external actions, paid actions, tool execution, and memory-backed 
 POST /api/paid-resource/review
 
 This endpoint is paid via x402 (0.03 USDC on Base eip155:8453).
+
+## 402 Payment Flow
+
+402 is not a dead end.
+It is the payment step.
+
+If you receive 402 Payment Required:
+1. Read the x402 payment requirements from the response.
+2. Complete payment using a compatible x402 client or wallet.
+3. Retry the exact same request with valid payment proof.
+4. Treat 200 OK as the successful protected response.
+
+Do not treat 402 Payment Required as a normal failure.
+It means the protected endpoint was reached and payment is required before access.
+
+Expected success signals may include:
+- payment verification succeeds
+- settlement succeeds
+- the retried request returns 200 OK
 
 ## Decision logic
 - resource_url empty or invalid → deny

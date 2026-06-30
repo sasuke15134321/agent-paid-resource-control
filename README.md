@@ -64,6 +64,24 @@ Call this endpoint **before** an AI agent executes a paid resource access:
 
 ---
 
+## 402 → Pay → Retry
+
+When an agent calls a protected endpoint, 402 Payment Required is not a dead end.
+It means the agent reached the paid resource and must complete payment before access.
+
+Flow:
+1. POST the planned review request.
+2. Receive 402 Payment Required.
+3. Read the x402 payment requirements from the response.
+4. Complete payment with a compatible x402 client or wallet.
+5. Retry the exact same request with valid payment proof.
+6. Use the 200 OK response as the paid review result.
+
+Do not change the request intent after payment.
+The retry should represent the same planned action being reviewed.
+
+---
+
 ## Decision logic
 
 | Condition | Decision |

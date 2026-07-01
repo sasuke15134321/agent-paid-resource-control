@@ -262,3 +262,38 @@ It tracks what:
 The goal is to stop making agents guess relationships between logs, files, payments, and decisions.
 
 AIエージェントの本当の課題は、情報不足ではなく関係不足です。ログ、ファイル、支払い、領収書、メモリ、判断は存在していても、それらがどう関係しているかをAIが毎回推測するためにズレが起きます。Evidence Relationship Graph は、その関係を外部化するための構造です。
+
+---
+
+## Buyer benefit: relationship, evidence, and boundary layer
+
+External primitives are emerging fast.
+
+Payments, permissions, memory, tools, runtimes, capital, and policies are being externalized through protocols and infrastructure such as x402, x401, MCP, external memory layers, sandbox runtimes, and policy engines.
+
+The missing layer is not another tool, wallet, model, or runtime.
+
+The missing layer is the relationship layer between them.
+
+For buyers and AI agent operators, this layer provides a practical benefit:
+
+Before an agent spends, executes, trusts memory, calls an external tool, or uses a paid resource, the buyer can check:
+- what goal the action serves
+- what evidence supports it
+- what permission authorizes it
+- what payment it requires
+- what resource will be used
+- what execution will happen
+- what changed after execution
+- what can be explained later
+
+This reduces unnecessary spending, unsafe execution, unclear authority, and unverifiable agent behavior.
+
+The goal is to stop making agents guess relationships between payments, permissions, memory, tools, and executions.
+
+Current implementation mapping:
+- agent-paid-resource-control: procurement and quality boundary before external resource use
+- agent-budget-guard: budget and spending check before payment or paid resource use. Payment success confirmed: settle success=True / 0.03 USDC / POST /api/budget/check 200 OK.
+- ai-agent-payment-safety-stack: payment evidence and execution evidence
+- agent-memory-api: memory reuse and memory protection
+- agent-security-gateway: risk classification before external input/tool execution

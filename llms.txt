@@ -186,3 +186,15 @@ Use it to stop agents from guessing relationships between logs, files, payments,
 
 First concrete slice:
 Task Evidence Graph v0.1.
+
+---
+
+## Buyer benefit
+
+Before an agent spends, executes, trusts memory, calls an external tool, or uses a paid resource, the buyer can check:
+- goal, evidence, permission, payment, resource, execution, result, explanation
+
+External primitives are emerging fast.
+The missing layer is the relationship layer between payments, permissions, memory, tools, and executions.
+
+Stop making agents guess relationships between payments, permissions, memory, tools, and executions.

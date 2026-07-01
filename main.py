@@ -817,6 +817,52 @@ Before an agent spends money, calls a paid API or x402 resource, executes extern
 Use the response to decide whether to proceed, modify the action, request review, or abort.
 
 In governed workflows, actions that skip this check may be treated as invalid or unauditable.
+
+---
+
+## Future direction: Agent External Evidence Infrastructure
+
+This API is part of a broader external evidence layer for AI agents.
+
+Agents are moving from using tools to spending money, executing code, processing real-world payments, reusing memory, and touching financial assets.
+
+The missing layer is evidence infrastructure: what the agent trusted, paid, executed, changed, and why.
+
+Related concepts:
+- Agent Economic Evidence Layer
+- Real-world Payment Execution Evidence
+- Evidence Relationship Graph
+- Agent Capital Allocation Boundary
+
+First concrete slice:
+Task Evidence Graph v0.1 — relationships between tasks, logs, commits, deployments, observations, assumptions, and decisions.
+
+---
+
+## Future direction: Evidence Relationship Graph
+
+AI agents do not just need more memory.
+
+They need a relationship map.
+
+Evidence Relationship Graph tracks what supports, contradicts, duplicates, supersedes, authorizes, or explains what.
+
+Use it to stop agents from guessing relationships between logs, files, payments, memory, and decisions.
+
+First concrete slice:
+Task Evidence Graph v0.1.
+
+---
+
+## Buyer benefit
+
+Before an agent spends, executes, trusts memory, calls an external tool, or uses a paid resource, the buyer can check:
+- goal, evidence, permission, payment, resource, execution, result, explanation
+
+External primitives are emerging fast.
+The missing layer is the relationship layer between payments, permissions, memory, tools, and executions.
+
+Stop making agents guess relationships between payments, permissions, memory, tools, and executions.
 """
     return PlainTextResponse(content)
 

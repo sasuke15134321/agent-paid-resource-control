@@ -189,6 +189,14 @@ Task Evidence Graph v0.1.
 
 ---
 
+## Observation signal: Open USD
+
+Open USD shows stablecoins moving toward shared enterprise money infrastructure.
+
+The missing layer is the evidence relationship layer between money rails, permissions, invoices, settlements, refunds, accounting entries, and agent actions.
+
+Open USD is not an integration. It is an observation signal.
+
 ## Buyer benefit
 
 Before an agent spends, executes, trusts memory, calls an external tool, or uses a paid resource, the buyer can check:

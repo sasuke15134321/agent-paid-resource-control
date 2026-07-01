@@ -297,3 +297,35 @@ Current implementation mapping:
 - ai-agent-payment-safety-stack: payment evidence and execution evidence
 - agent-memory-api: memory reuse and memory protection
 - agent-security-gateway: risk classification before external input/tool execution
+
+---
+
+## Observation signal: Open USD and shared enterprise money layers
+
+Open USD is an observation signal for this project.
+
+It shows stablecoins moving from crypto-native payment assets toward shared enterprise money infrastructure.
+
+For AI agents, this does not only create a new payment option.
+
+It creates a stronger need for evidence around:
+- why the agent moved funds
+- which stablecoin or rail was selected
+- which authority approved the movement
+- which balance funded the transaction
+- which invoice, merchant, partner, or settlement entry it relates to
+- how the movement reconciles with accounting
+- what changed after the payment or settlement
+
+The missing layer is not another wallet, model, tool, or runtime.
+
+The missing layer is the evidence relationship layer between money rails, permissions, invoices, settlements, refunds, accounting entries, and agent actions.
+
+Open USD is not treated here as an integration.
+It is treated as a signal that enterprise money layers are becoming external primitives.
+
+Relevant layers:
+- Agent Economic Evidence Layer
+- Real-world Payment Execution Evidence
+- Evidence Relationship Graph
+- Agent Capital Allocation Boundary
